@@ -29,6 +29,8 @@
          
 
         let mauss = [];
+        let pfotes =[];
+        
 
         document.onkeydown = function(e) { 
             console.log(e.keyCode);
@@ -60,30 +62,62 @@
             canvas=document.getElementById("canvas");
             ctx= canvas.getContext("2d");
             setInterval(update, 1000/25);
-            setInterval(createMauss, 5000);
-            setInterval(checkForCrash, 100 / 25);
+            setInterval(createMauss,5000);
+            setInterval(checkForCrash, 1000 / 25);
+            setInterval(checkForPfote, 1000/10);
             loadImages();
             draw();
         }
 
         function checkForCrash (){
             mauss.forEach(function(maus){
-                if (katze.x+katze.width > maus.x + maus.width
-                    && katze.y + katze.height > maus.y
-                    && katze.x > maus.x
-                    && katze.y > maus.y)
+                if (katze.x < maus.x + maus.width &&
+                    katze.x + katze.width > maus.x &&
+                    katze.y < maus.y + maus.height &&
+                    katze.y + katze.height > maus.y)
                 {
                     katze.img.src="img/boom.png";
                     console.log("Collison!!!");
+                    mauss=mauss.filter(u=> u !=maus);
                 }
-            });
-        }
 
+                pfotes.forEach(function(pfote){
+                  if (pfote.x < maus.x + maus.width &&
+                    pfote.x + pfote.width > maus.x &&
+                    pfote.y < maus.y + maus.height &&
+                    pfote.y + pfote.height > maus.y)  
+                {
+                    maus.hit=true;
+                    maus.img.src="img/boom.png";
+                    console.log("Collision!!!")
+
+                    setTimeout (() => {
+                        mauss=mauss.filter(u=> u !=maus);
+                    }, 2000);
+            }
+        });
+    });
+}
+
+        function checkForPfote(){
+            if (KEY_SPACE) {
+                let pfote={
+                    x:katze.x+110,
+                    y:katze.y+22,
+                    width: 30,
+                    height: 20,
+                    src:"img/pfote.png",
+                    img: new Image()
+            };
+            pfote.img.src=pfote.src;
+            pfotes.push(pfote);
+        }
+    }
 
         function createMauss (){
           let maus= {
             x:800,
-            y:100,
+            y: Math.random()*500,
             width: 80,
             height: 80,
             src: "img/maus.png",
@@ -102,13 +136,19 @@
             }
 
             mauss.forEach(function(maus) {
+                if (!maus.hit){
                 maus.x -= 5;
-            }); 
+            }
+        });
 
-        }
+            pfotes.forEach(function(pfote){
+                pfote.x+=15;
+            
+        });}
+    
 
         function loadImages(){
-            backgroundImage.src="img/wiese.png"
+            backgroundImage.src="img/weltall.jpg"
             katze.img=new Image();
             katze.img.src= katze.src;
         }
@@ -120,7 +160,10 @@
 
             mauss.forEach(function(maus) {
                 ctx.drawImage(maus.img, maus.x, maus.y, maus.width, maus.height);
+            });
 
+            pfotes.forEach(function(pfote){
+                ctx.drawImage(pfote.img, pfote.x, pfote.y, pfote.width, pfote.height);
             });
             requestAnimationFrame(draw);
         }
@@ -129,7 +172,7 @@
 
 </head>
 <body onload="startGame()">
-    <canvas id="canvas" height= "300" width="500"></canvas>
+    <canvas id="canvas" height= "384" width="640"></canvas>
     
 </body>
 </html>
