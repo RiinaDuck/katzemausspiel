@@ -49,6 +49,7 @@
         document.onkeyup = function(e) { 
             console.log(e.keyCode);
             if (e.keyCode == 32) { // Leertaste loslassen
+                e.preventDefault();
                 KEY_SPACE = false;
             }
             if (e.keyCode == 38) { // Nach oben loslassen
