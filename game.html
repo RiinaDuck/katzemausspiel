@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>katzemausspiel</title>
+    <style>
+        canvas {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+    </style>
+
+    <script>
+        let KEY_SPACE = false; //32
+        let KEY_UP=false; //38
+        let KEY_DOWN=false; //40
+        let canvas;
+        let ctx;
+        let backgroundImage=new Image();
+
+        let katze = {
+            x: 10,
+            y: 100,
+            width: 100,
+            height: 70,
+            src: "img/katze.png"
+        };
+
+         
+
+        let mauss = [];
+
+        document.onkeydown = function(e) { 
+            console.log(e.keyCode);
+            if (e.keyCode == 32) { // Leertaste gedrückt
+                KEY_SPACE = true;
+            }
+            if (e.keyCode == 38) {// Nach oben gedrückt
+                KEY_UP = true;
+            }
+            if (e.keyCode == 40) {// Nach unten gedrückt
+                KEY_DOWN = true;
+            }
+        }
+
+        document.onkeyup = function(e) { 
+            console.log(e.keyCode);
+            if (e.keyCode == 32) { // Leertaste loslassen
+                KEY_SPACE = false;
+            }
+            if (e.keyCode == 38) { // Nach oben loslassen
+                KEY_UP = false;
+            }
+            if (e.keyCode == 40) { // Nach unten loslassen
+                KEY_DOWN = false;
+            }
+        }
+
+        function startGame(){
+            canvas=document.getElementById("canvas");
+            ctx= canvas.getContext("2d");
+            setInterval(update, 1000/25);
+            setInterval(createMauss, 5000);
+            setInterval(checkForCrash, 100 / 25);
+            loadImages();
+            draw();
+        }
+
+        function checkForCrash (){
+            mauss.forEach(function(maus){
+                if (katze.x+katze.width > maus.x + maus.width
+                    && katze.y + katze.height > maus.y
+                    && katze.x > maus.x
+                    && katze.y > maus.y)
+                {
+                    katze.img.src="img/boom.png";
+                    console.log("Collison!!!");
+                }
+            });
+        }
+
+
+        function createMauss (){
+          let maus= {
+            x:800,
+            y:100,
+            width: 80,
+            height: 80,
+            src: "img/maus.png",
+            img: new Image()
+          };
+          maus.img.src = maus.src;
+          mauss.push(maus);
+        }
+
+        function update(){
+            if(KEY_UP) {
+                katze.y -= 5;
+            }
+            if(KEY_DOWN) {
+                katze.y += 5;
+            }
+
+            mauss.forEach(function(maus) {
+                maus.x -= 5;
+            }); 
+
+        }
+
+        function loadImages(){
+            backgroundImage.src="img/wiese.png"
+            katze.img=new Image();
+            katze.img.src= katze.src;
+        }
+
+        function draw (){
+            ctx.drawImage(backgroundImage, 0, 0);
+            ctx.drawImage(katze.img, katze.x, katze.y, katze.width, katze.height);
+            
+
+            mauss.forEach(function(maus) {
+                ctx.drawImage(maus.img, maus.x, maus.y, maus.width, maus.height);
+
+            });
+            requestAnimationFrame(draw);
+        }
+
+    </script>
+
+</head>
+<body onload="startGame()">
+    <canvas id="canvas" height= "300" width="500"></canvas>
+    
+</body>
+</html>
