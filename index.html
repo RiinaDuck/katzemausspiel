@@ -31,34 +31,34 @@
         let mauss = [];
         let pfotes =[];
         
+document.addEventListener("keydown", function(e) {
+    console.log(e.keyCode);
+    if (e.keyCode == 32) {
+        e.preventDefault();
+        KEY_SPACE = true;
+    }
+    if (e.keyCode == 38) {
+        KEY_UP = true;
+    }
+    if (e.keyCode == 40) {
+        KEY_DOWN = true;
+    }
+}, { passive: false });
 
-        document.onkeydown = function(e) { 
-            console.log(e.keyCode);
-            if (e.keyCode == 32) { // Leertaste gedrückt
-                e.preventDefault();
-                KEY_SPACE = true;
-            }
-            if (e.keyCode == 38) {// Nach oben gedrückt
-                KEY_UP = true;
-            }
-            if (e.keyCode == 40) {// Nach unten gedrückt
-                KEY_DOWN = true;
-            }
-        }
-
-        document.onkeyup = function(e) { 
-            console.log(e.keyCode);
-            if (e.keyCode == 32) { // Leertaste loslassen
-                e.preventDefault();
-                KEY_SPACE = false;
-            }
-            if (e.keyCode == 38) { // Nach oben loslassen
-                KEY_UP = false;
-            }
-            if (e.keyCode == 40) { // Nach unten loslassen
-                KEY_DOWN = false;
-            }
-        }
+document.addEventListener("keyup", function(e) {
+    console.log(e.keyCode);
+    if (e.keyCode == 32) {
+        e.preventDefault();
+        KEY_SPACE = false;
+    }
+    if (e.keyCode == 38) {
+        KEY_UP = false;
+    }
+    if (e.keyCode == 40) {
+        KEY_DOWN = false;
+    }
+}, { passive: false });
+        
 
         function startGame(){
             canvas=document.getElementById("canvas");
